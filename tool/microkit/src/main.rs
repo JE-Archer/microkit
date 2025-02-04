@@ -3420,6 +3420,17 @@ fn main() -> Result<(), String> {
         }
 
         kernel_elf.write_symbol("ksDomSchedule", &out)?;
+    } else {
+        kernel_elf.write_symbol(
+            "ksDomScheduleLength",
+            &(1_u64.to_le_bytes()),
+        )?;
+
+        let mut out = Vec::with_capacity(16);
+        out.extend(0_u64.to_le_bytes());
+        out.extend(1_u64.to_le_bytes());
+
+        kernel_elf.write_symbol("ksDomSchedule", &out)?;
     }
 
     if monitor_elf.segments.iter().filter(|s| s.loadable).count() > 1 {
